@@ -15,7 +15,7 @@ def genmod(bld, target, source):
   if source == None:
     source = [target]
   for i in range(len(source)):
-    source[i] = "src/" + source[i] + ".cc "
+    source[i] = "src/" + source[i] + ".cc"
   obj.sources = " ".join(source)
   obj.includes = ["."]
   obj.defines = "__STDC_LIMIT_MACROS"
@@ -23,7 +23,7 @@ def genmod(bld, target, source):
 
 def build(bld):
   if True:
-    genmod(bld, "tc", ["tc", "tc_hdb", "tc_bdb", "tc_fdb", "tc_tdb", "tc_adb"])
+    genmod(bld, "tc_all", ["tc_all", "tc_hdb", "tc_bdb", "tc_fdb", "tc_tdb", "tc_adb"])
   else:
     genmod(bld, "tc_hdb")
     genmod(bld, "tc_bdb")
