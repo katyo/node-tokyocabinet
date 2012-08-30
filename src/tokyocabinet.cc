@@ -126,12 +126,11 @@ inline Local<Object> tcmaptoobj (TCMAP *map) {
   }                                                             \
 
 #define DEFINE_ASYNC_EXEC(name)                                         \
-  static int                                                            \
+  static void                                                           \
   Exec##name (eio_req *req) {                                           \
     name##AsyncData *data = static_cast<name##AsyncData *>(req->data);  \
     req->result = data->run() ? TCESUCCESS : data->ecode();             \
-    return 0;                                                           \
-  }                                                                     \
+  }
 
 #define DEFINE_ASYNC_AFTER(name)                                        \
   static int                                                            \
