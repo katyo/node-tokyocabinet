@@ -1,7 +1,7 @@
 // Hash db bench
 
-var sys = require('sys');
-var TC = require('../build/default/tokyocabinet');
+var sys = require('util');
+var TC = require('../build/Release/tc');
 var fs = require('fs');
 
 sys.puts("Tokyo Cabinet version " + TC.VERSION);

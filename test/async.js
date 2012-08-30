@@ -1,8 +1,8 @@
 // sample codes at http://1978th.net/tokyocabinet/spex-en.html
 // translated into JS.
 
-var sys = require('sys');
-var TC = require('../build/default/tokyocabinet');
+var sys = require('util');
+var TC = require('../build/Release/tc');
 var fs = require('fs');
 
 sys.puts("Tokyo Cabinet version " + TC.VERSION);
