@@ -1,3 +1,9 @@
+node-tokyocabinet (0.1.1) unstable; urgency=low
+
+  * Temporary Release.
+
+ -- Kayo Phoenix <kayo@illumium.org>  Fri, 31 Aug 2012 00:46:27 +0600
+
 node-tokyocabinet (0.0.1) unstable; urgency=low
 
   * Initial Release.

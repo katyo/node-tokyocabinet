@@ -28,6 +28,7 @@
     "dependencies": {
         "lib": "tokyocabinet"
     },
+    "main": "./tc.js",
     "engines": [
         "node"
     ]
