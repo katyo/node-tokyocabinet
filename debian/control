@@ -1,0 +1,14 @@
+Source: node-tokyocabinet
+Section: misc
+Priority: extra
+Maintainer: Kayo Phoenix <kayo@illumium.org>
+Build-Depends: debhelper (>= 7.0.50~), nodejs-dev, libtokyocabinet-dev
+Standards-Version: 3.8.4
+Homepage: https://github.com/katyo/node-tokyocabinet
+
+Package: node-tokyocabinet
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Tokyo Cabinet binding for Node.js
+ So far only implemented interfaces
+ defined in tokyocabinet.idl.
