@@ -16,14 +16,14 @@ def genmod(bld, target, source):
     source = [target]
   for i in range(len(source)):
     source[i] = "src/" + source[i] + ".cc "
-  obj.source = " ".join(source)
+  obj.sources = " ".join(source)
   obj.includes = ["."]
   obj.defines = "__STDC_LIMIT_MACROS"
   obj.lib = ["tokyocabinet"]
 
 def build(bld):
   if True:
-    genmod(bld, "tc", ["tc_hdb", "tc_bdb", "tc_fdb", "tc_tdb", "tc_adb"])
+    genmod(bld, "tc", ["tc", "tc_hdb", "tc_bdb", "tc_fdb", "tc_tdb", "tc_adb"])
   else:
     genmod(bld, "tc_hdb")
     genmod(bld, "tc_bdb")

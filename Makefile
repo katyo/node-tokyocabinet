@@ -7,6 +7,6 @@ build:
 	@node-waf build
 
 clean:
-	@node-waf clean distclean
+	-@node-waf clean distclean
 
 .PHONY: config configure build clean
