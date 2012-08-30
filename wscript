@@ -9,10 +9,24 @@ def configure(conf):
   conf.check_tool("compiler_cxx")
   conf.check_tool("node_addon")
 
-def build(bld):
+def genmod(bld, target, source):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
-  obj.target = "tokyocabinet"
-  obj.source = "src/tokyocabinet.cc"
+  obj.target = target
+  if source == None:
+    source = [target]
+  for i in range(len(source)):
+    source[i] = "src/" + source[i] + ".cc "
+  obj.source = " ".join(source)
   obj.includes = ["."]
   obj.defines = "__STDC_LIMIT_MACROS"
   obj.lib = ["tokyocabinet"]
+
+def build(bld):
+  if True:
+    genmod(bld, "tc", ["tc_hdb", "tc_bdb", "tc_fdb", "tc_tdb", "tc_adb"])
+  else:
+    genmod(bld, "tc_hdb")
+    genmod(bld, "tc_bdb")
+    genmod(bld, "tc_fdb")
+    genmod(bld, "tc_tdb")
+    genmod(bld, "tc_adb")
