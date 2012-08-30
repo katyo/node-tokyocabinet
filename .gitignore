@@ -1,3 +1,7 @@
-build/*
+debian/node-tokyocabinet
+debian/*.log
+debian/*.substvars
+debian/files
+build
 .lock-wscript
-*.tch
+*~
