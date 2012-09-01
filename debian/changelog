@@ -1,3 +1,9 @@
+node-tokyocabinet (0.1.2) unstable; urgency=low
+
+  * Sand Storm Release.
+
+ -- Kayo Phoenix <kayo@illumium.org>  Sat, 01 Sep 2012 22:44:09 +0600
+
 node-tokyocabinet (0.1.1) unstable; urgency=low
 
   * Temporary Release.
