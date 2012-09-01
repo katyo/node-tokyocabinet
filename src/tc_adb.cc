@@ -19,7 +19,7 @@ namespace node {
     Initialize (const Handle<Object> target) {
       HandleScope scope;
       Local<FunctionTemplate> tmpl = FunctionTemplate::New(New);
-      set_ecodes(tmpl);
+      //set_ecodes(tmpl);
       tmpl->InstanceTemplate()->SetInternalFieldCount(1);
 
       NODE_SET_PROTOTYPE_METHOD(tmpl, "openSync", OpenSync);

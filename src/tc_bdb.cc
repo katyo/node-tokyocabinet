@@ -23,7 +23,7 @@ namespace node {
     static void
     Initialize (const Handle<Object> target) {
       HandleScope scope;
-      set_ecodes(Tmpl);
+      //set_ecodes(Tmpl);
       Tmpl->InstanceTemplate()->SetInternalFieldCount(1);
 
       DEFINE_PREFIXED_CONSTANT(Tmpl, BDB, TLARGE);

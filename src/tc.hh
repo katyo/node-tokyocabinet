@@ -172,6 +172,7 @@ namespace node {
   void                                                                  \
   init_##name (Handle<Object> target) {                                 \
     classes;                                                            \
+    set_ecodes (target);                                                \
     target->Set(String::NewSymbol("VERSION"), String::New(tcversion));  \
   }                                                                     \
   NODE_MODULE(name, init_##name);
@@ -196,32 +197,7 @@ namespace node {
 #endif
 
   // Tokyo Cabinet error codes
-  inline void set_ecodes (const Handle<FunctionTemplate> tmpl) {
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ESUCCESS);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ETHREAD);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EINVALID);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ENOFILE);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ENOPERM);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EMETA);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ERHEAD);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EOPEN);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ECLOSE);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ETRUNC);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ESYNC);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ESTAT);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ESEEK);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EREAD);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EWRITE);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EMMAP);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ELOCK);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EUNLINK); 
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ERENAME); 
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EMKDIR);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ERMDIR);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EKEEP);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, ENOREC);
-    DEFINE_PREFIXED_CONSTANT(tmpl, TC, EMISC);
-  }
+  void set_ecodes (const Handle<Object> tmpl);
 
   // Database wrapper (interfaces for database objects, all included)
   class TCWrap : public ObjectWrap {

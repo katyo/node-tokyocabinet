@@ -23,7 +23,7 @@ namespace node {
     Initialize (const Handle<Object> target) {
       HandleScope scope;
       Tmpl->InstanceTemplate()->SetInternalFieldCount(1);
-      set_ecodes(Tmpl);
+      //set_ecodes(Tmpl);
 
       DEFINE_PREFIXED_CONSTANT(Tmpl, TDB, TLARGE);
       DEFINE_PREFIXED_CONSTANT(Tmpl, TDB, TDEFLATE);
@@ -568,7 +568,7 @@ namespace node {
     Initialize (const Handle<Object> target) {
       HandleScope scope;
       Local<FunctionTemplate> tmpl = FunctionTemplate::New(New);
-      set_ecodes(tmpl);
+      //set_ecodes(tmpl);
 
       DEFINE_PREFIXED_CONSTANT(tmpl, TDB, QCSTREQ);
       DEFINE_PREFIXED_CONSTANT(tmpl, TDB, QCSTRINC);

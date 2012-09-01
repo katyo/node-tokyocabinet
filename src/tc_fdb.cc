@@ -20,7 +20,7 @@ namespace node {
       HandleScope scope;
       Local<FunctionTemplate> tmpl = FunctionTemplate::New(New);
       tmpl->InstanceTemplate()->SetInternalFieldCount(1);
-      set_ecodes(tmpl);
+      //set_ecodes(tmpl);
 
       DEFINE_PREFIXED_CONSTANT(tmpl, FDB, OREADER);
       DEFINE_PREFIXED_CONSTANT(tmpl, FDB, OWRITER);
