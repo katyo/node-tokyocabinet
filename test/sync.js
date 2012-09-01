@@ -10,7 +10,7 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
 (function() {
   sys.puts("== Sample: HDB ==");
 
-  var hdb = new tc.hdb();
+  var hdb = tc.hdb();
 
   try {
     hdb.openSync('casket.tch', 'wc');
@@ -31,7 +31,7 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error(e);
   }
-  
+
   try {
     hdb.iterinitSync()
     var key, value;
@@ -57,7 +57,7 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
 (function() {
   sys.puts("== Sample: BDB ==");
 
-  var bdb = new tc.bdb();
+  var bdb = tc.bdb();
 
   try {
     bdb.openSync('casket.tcb', 'wc');
@@ -78,9 +78,9 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error(e);
   }
-  
+
   var cur = bdb.cur(bdb);
-  
+
   try {
     cur.firstSync();
     var key, value;
@@ -104,8 +104,8 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
 
 (function() {
   sys.puts("== Sample: FDB ==");
-  
-  var fdb = new tc.fdb();
+
+  var fdb = tc.fdb();
 
   try {
     fdb.openSync('casket.tcf', 'wc');
@@ -120,13 +120,13 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error(e);
   }
-  
+
   try {
     sys.puts(fdb.getSync("1"));
   } catch(e) {
     sys.error(e);
   }
-  
+
   try {
     fdb.iterinitSync();
     var key, value;
@@ -145,21 +145,21 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error(e);
   }
-  
+
   fs.unlink('casket.tcf');
 }());
 
 (function() {
   sys.puts("== Sample: TDB ==");
-  
-  var tdb = new tc.tdb();
-  
+
+  var tdb = tc.tdb();
+
   try {
     tdb.openSync('casket.tct', 'wc');
   } catch(e) {
     sys.error(e);
   }
-  
+
   var pk = tdb.genuid();
   var cols = {"name": "mikio", "age": "30", "lang": "ja,en,c"};
   try {
@@ -167,7 +167,7 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error(e);
   }
-  
+
   var pk = tdb.genuid();
   var cols = {"name": "joker", "age": "19", "lang": "en,es"};
   try {
@@ -203,27 +203,27 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
       sys.print("\n");
     }
   });
-  
+
   try {
     tdb.closeSync();
   } catch(e) {
     sys.error(e);
   }
-  
+
   fs.unlink('casket.tct');
 }());
 
 (function() {
   sys.puts("== Sample: ADB ==");
 
-  var adb = new tc.adb();
-  
+  var adb = tc.adb();
+
   try {
     adb.openSync('casket.tcb');
   } catch(e) {
     sys.error("open error");
   }
-  
+
   try {
     adb.putSync("foo", "hop");
     adb.putSync("bar", "step");
@@ -231,13 +231,13 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error("put error");
   }
-  
+
   try {
     sys.puts(adb.getSync("foo"));
   } catch(e) {
     sys.error("get error");
   }
-  
+
   try {
     adb.iterinitSync();
     var key, value;
@@ -250,12 +250,12 @@ sys.puts("Tokyo Cabinet version " + tc.ver);
   } catch(e) {
     sys.error("iter error");
   }
-  
+
   try {
     adb.closeSync();
   } catch(e) {
     sys.error("close error");
   }
-  
+
   fs.unlink('casket.tcb');
 }());

@@ -17,7 +17,7 @@ setTimeout(next_sample, 10);
 samples.push(function() {
   sys.puts("== Sample: HDB ==");
 
-  var hdb = new tc.hdb();
+  var hdb = tc.hdb();
   // this line is necessary for an async operation
   hdb.setmutex();
 
@@ -75,7 +75,7 @@ samples.push(function() {
 samples.push(function() {
   sys.puts("== Sample: BDB ==");
 
-  var bdb = new tc.bdb();
+  var bdb = tc.bdb();
   // this line is necessary for an async operation
   if (!bdb.setmutex()) throw bdb.errmsg();
 
@@ -132,7 +132,7 @@ samples.push(function() {
 samples.push(function() {
   sys.puts("== Sample: FDB ==");
 
-  var fdb = new tc.fdb();
+  var fdb = tc.fdb();
   // this line is necessary for an async operation
   fdb.setmutex();
 
@@ -189,7 +189,7 @@ samples.push(function() {
 samples.push(function() {
   sys.puts("== Sample: TDB ==");
 
-  var tdb = new tc.tdb;
+  var tdb = tc.tdb();
   // this line is necessary for an async operation
   tdb.setmutex();
 
@@ -248,8 +248,8 @@ samples.push(function() {
 samples.push(function() {
   sys.puts("== Sample: ADB ==");
 
-  var adb = new tc.adb;
-
+  var adb = tc.adb();
+  
   // no need to manually set mutex since adb automatically does it on open
   adb.open('casket.tcb', function(e) {
     if (e) sys.error(e);
