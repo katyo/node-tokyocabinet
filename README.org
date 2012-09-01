@@ -1,0 +1,61 @@
+* TODO Introduction
+  Yet Another [[http://fallabs.com/tokyocabinet/][Tokyo Cabinet]] binding for [[http://nodejs.org/][Node.JS]]
+  
+  It's more easy to use fork of original bindings which was written by Atsushi Takayama at 2010.
+  
+* TODO API Overview
+  : Coming soon ^_^
+  
+* Usage Example
+  : var tc = require('tokyocabinet');
+
+** Async interface
+   : var hdb = tc.hdb();
+   : // make database multi-thread safe
+   : hdb.setmutex();
+   : // open database with mode: writer + creat
+   : hdb.open('casket.tch', 'wc', function(err){
+   :   if (err) throw err;
+   :   // store a value
+   :   hdb.put('foo', 'bar', function(err){
+   :     if (err) throw err;
+   :     // retrieve a value
+   :     hdb.get('foo', function(err, val){
+   :       if (err) throw err;
+   :       console.log(val);
+   :       hdb.close(function(err){
+   :         if (err) throw err;
+   :       });
+   :     });
+   :   });
+   : });
+   
+** Sync interface
+   It's more fastest but doesn't recommended because Node.JS uses an event-driven execution model.
+   : var hdb = tc.hdb();
+   : // open database with mode: writer + creat
+   : try {
+   :   hdb.openSync('casket.tch', 'wc');
+   : } catch(e) {
+   :   throw e;
+   : }
+   : // store a value
+   : try {
+   :   hdb.put('foo', 'bar');
+   : } catch(e) {
+   :   throw e;
+   : }
+   : // retrieve a value
+   : try {
+   :   var v = hdb.get('foo'); // => 'bar'
+   :   console.log(v);
+   : } catch(e) {
+   :   throw e;
+   : }
+
+* License
+  The MIT License
+  
+  Copyright © 2010 Atsushi Takayama <taka.atsushi at gmail.com>
+  
+  Copyright © 2012 Kayo Phoenix <kayo at illumium.org>
