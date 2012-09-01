@@ -2,45 +2,53 @@
 // translated into JS.
 
 var sys = require('util');
-var TC = require('../tc_all');
+var tc = require('../tc');
 var fs = require('fs');
 
-sys.puts("Tokyo Cabinet version " + TC.VERSION);
+sys.puts("Tokyo Cabinet version " + tc.ver);
 
 (function() {
   sys.puts("== Sample: HDB ==");
-  var HDB = TC.HDB;
 
-  var hdb = new HDB;
+  var hdb = new tc.hdb();
 
-  if (!hdb.open('casket.tch', HDB.OWRITER | HDB.OCREAT)) {
-    sys.error(hdb.errmsg());
+  try {
+    hdb.openSync('casket.tch', 'wc');
+  } catch(e) {
+    sys.error(e);
   }
 
-  if (!hdb.put("foo", "hop") ||
-      !hdb.put("bar", "step") ||
-      !hdb.put("baz", "jump")) {
-    sys.error(hdb.errmsg());
+  try {
+    hdb.putSync("foo", "hop");
+    hdb.putSync("bar", "step");
+    hdb.putSync("baz", "jump");
+  } catch(e) {
+    sys.error(e);
   }
 
-  var value = hdb.get("foo");
-  if (value) {
-    sys.puts(value);
-  } else {
-    sys.error(hdb.errmsg());
+  try {
+    sys.puts(hdb.getSync("foo"));
+  } catch(e) {
+    sys.error(e);
   }
-
-  hdb.iterinit();
-  var key;
-  while ((key = hdb.iternext()) !== null) {
-    value = hdb.get(key);
-    if (value !== null) {
-      sys.puts(key + ':' + value);
+  
+  try {
+    hdb.iterinitSync()
+    var key, value;
+    while ((key = hdb.iternextSync()) !== null) {
+      value = hdb.getSync(key);
+      if (value !== null) {
+        sys.puts(key + ':' + value);
+      }
     }
+  } catch(e) {
+    sys.error(e);
   }
 
-  if (!hdb.close()) {
-    sys.error(hdb.errmsg());
+  try {
+    hdb.closeSync();
+  } catch(e) {
+    sys.error(e);
   }
 
   fs.unlink('casket.tch');
@@ -49,40 +57,45 @@ sys.puts("Tokyo Cabinet version " + TC.VERSION);
 (function() {
   sys.puts("== Sample: BDB ==");
 
-  var BDB = TC.BDB;
-  var CUR = TC.BDBCUR;
+  var bdb = new tc.bdb();
 
-  var bdb = new BDB;
-
-  if (!bdb.open('casket.tcb', BDB.OWRITER | BDB.OCREAT)) {
-    sys.error(bdb.errmsg());
+  try {
+    bdb.openSync('casket.tcb', 'wc');
+  } catch(e) {
+    sys.error(e);
   }
 
-  if (!bdb.put("foo", "hop") ||
-      !bdb.put("bar", "step") ||
-      !bdb.put("baz", "jump")) {
-    sys.error(bdb.errmsg());
+  try {
+    bdb.putSync("foo", "hop");
+    bdb.putSync("bar", "step");
+    bdb.putSync("baz", "jump");
+  } catch(e) {
+    sys.error(e);
   }
 
-  var value = bdb.get("foo");
-  if (value) {
-    sys.puts(value);
-  } else {
-    sys.error(bdb.errmsg());
+  try {
+    sys.puts(bdb.getSync("foo"));
+  } catch(e) {
+    sys.error(e);
   }
-
-  var cur = new CUR(bdb);
-  cur.first();
-  var key;
-  while ((key = cur.key()) !== null) {
-    var value = cur.val();
-    if (value) {
-      sys.puts(key + ":" + value);
+  
+  var cur = bdb.cur(bdb);
+  
+  try {
+    cur.firstSync();
+    var key, value;
+    while ((key = cur.keySync()) !== null) {
+      value = cur.valSync();
+      if (value) {
+        sys.puts(key + ":" + value);
+      }
+      cur.nextSync();
     }
-    cur.next();
+  } catch(e) {
+    sys.error(e);
   }
 
-  if (!bdb.close()) {
+  if (!bdb.closeSync()) {
     sys.error(bdb.errmsg());
   }
 
@@ -91,66 +104,76 @@ sys.puts("Tokyo Cabinet version " + TC.VERSION);
 
 (function() {
   sys.puts("== Sample: FDB ==");
+  
+  var fdb = new tc.fdb();
 
-  var FDB = TC.FDB;
-
-  var fdb = new FDB();
-
-  if (!fdb.open('casket.tcf', FDB.OWRITER | FDB.OCREAT)) {
-    sys.error(fdb.errmsg());
+  try {
+    fdb.openSync('casket.tcf', 'wc');
+  } catch(e) {
+    sys.error(e);
   }
 
-  if (!fdb.put("1", "one") ||
-      !fdb.put("12", "twelve") ||
-      !fdb.put("144", "one forty four")) {
-    sys.error(fdb.errmsg());
+  try {
+    fdb.putSync("1", "one");
+    fdb.putSync("12", "twelve");
+    fdb.putSync("144", "one forty four");
+  } catch(e) {
+    sys.error(e);
   }
-
-  var value = fdb.get("1");
-  if (value) {
-    sys.puts(value);
-  } else {
-    sys.error(fdb.errmsg());
+  
+  try {
+    sys.puts(fdb.getSync("1"));
+  } catch(e) {
+    sys.error(e);
   }
-
-  fdb.iterinit();
-  var key;
-  while((key = fdb.iternext()) != null) {
-    var value = fdb.get(key);
-    if (value) {
-      sys.puts(key + ':' + value);
+  
+  try {
+    fdb.iterinitSync();
+    var key, value;
+    while ((key = fdb.iternextSync()) != null) {
+      value = fdb.getSync(key);
+      if (value) {
+        sys.puts(key + ':' + value);
+      }
     }
+  } catch(e) {
+    sys.error(e);
   }
 
-  if (!fdb.close()) {
-    sys.error(fdb.errmsg());
+  try {
+    fdb.closeSync();
+  } catch(e) {
+    sys.error(e);
   }
-
+  
   fs.unlink('casket.tcf');
 }());
 
 (function() {
   sys.puts("== Sample: TDB ==");
-
-  var TDB = TC.TDB;
-  var QRY = TC.TDBQRY;
-
-  var tdb = new TDB();
-
-  if (!tdb.open('casket.tct', TDB.OWRITER | TDB.OCREAT)) {
-    sys.error(tdb.errmsg());
+  
+  var tdb = new tc.tdb();
+  
+  try {
+    tdb.openSync('casket.tct', 'wc');
+  } catch(e) {
+    sys.error(e);
   }
-
+  
   var pk = tdb.genuid();
   var cols = {"name": "mikio", "age": "30", "lang": "ja,en,c"};
-  if (!tdb.put(pk, cols)) {
-    sys.error(tdb.errmsg());
+  try {
+    tdb.putSync(pk, cols);
+  } catch(e) {
+    sys.error(e);
   }
-
+  
   var pk = tdb.genuid();
   var cols = {"name": "joker", "age": "19", "lang": "en,es"};
-  if (!tdb.put(pk, cols)) {
-    sys.error(tdb.errmsg());
+  try {
+    tdb.putSync(pk, cols);
+  } catch(e) {
+      sys.error(e);
   }
 
   pk = "12345";
@@ -158,71 +181,81 @@ sys.puts("Tokyo Cabinet version " + TC.VERSION);
   cols.name = "falcon";
   cols.age = "31";
   cols.lang = "ja";
-  if (!tdb.put(pk, cols)) {
-    sys.error(tdb.errmsg());
+  try {
+    tdb.putSync(pk, cols);
+  } catch(e) {
+    sys.error(e);
   }
 
-  var qry = new QRY(tdb);
-  qry.addcond("age", QRY.QCNUMGE, "20");
-  qry.addcond("lang", QRY.QCSTROR, "ja,en");
-  qry.setorder("name", QRY.QOSTRASC);
-  qry.setlimit(10, 0);
-  var res = qry.search();
+  var qry = tdb.qry(tdb)
+    .cond("age", ">=", 20)
+    .cond("lang", "|", "ja,en")
+    .order("name", "~v")
+    .limit(10, 0);
+  var res = qry.searchSync();
   res.forEach(function(r) {
-    var cols = tdb.get(r);
+    var cols = tdb.getSync(r);
     if (cols) {
       sys.print(r);
       Object.keys(cols).forEach(function(name) {
-        sys.print("\t" + name + "\t" + cols[name])
+        sys.print("\t" + name + "\t" + cols[name]);
       });
       sys.print("\n");
     }
   });
-
-  if (!tdb.close()) {
-    sys.error(tdb.errmsg());
+  
+  try {
+    tdb.closeSync();
+  } catch(e) {
+    sys.error(e);
   }
-
+  
   fs.unlink('casket.tct');
 }());
 
 (function() {
   sys.puts("== Sample: ADB ==");
+
+  var adb = new tc.adb();
   
-  var ADB = TC.ADB;
-
-  var adb = new ADB();
-
-  if (!adb.open('casket.tcb')) {
+  try {
+    adb.openSync('casket.tcb');
+  } catch(e) {
     sys.error("open error");
   }
-
-  if (!adb.put("foo", "hop") ||
-      !adb.put("bar", "step") ||
-      !adb.put("baz", "jump")) {
+  
+  try {
+    adb.putSync("foo", "hop");
+    adb.putSync("bar", "step");
+    adb.putSync("baz", "jump");
+  } catch(e) {
     sys.error("put error");
   }
-
-  var value = adb.get("foo");
-  if (value) {
-    sys.puts(value);
-  } else {
+  
+  try {
+    sys.puts(adb.getSync("foo"));
+  } catch(e) {
     sys.error("get error");
   }
-
-  adb.iterinit();
-  var key;
-  while((key = adb.iternext()) != null) {
-    var value = adb.get(key);
-    if (value) {
-      sys.puts(key + ':' + value);
+  
+  try {
+    adb.iterinitSync();
+    var key, value;
+    while((key = adb.iternextSync()) != null) {
+      value = adb.getSync(key);
+      if (value) {
+        sys.puts(key + ':' + value);
+      }
     }
+  } catch(e) {
+    sys.error("iter error");
   }
-
-  if (!adb.close()) {
+  
+  try {
+    adb.closeSync();
+  } catch(e) {
     sys.error("close error");
   }
-
+  
   fs.unlink('casket.tcb');
 }());
-

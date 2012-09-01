@@ -91,7 +91,7 @@ samples.push(function() {
           bdb.get("foo", function(e, value) {
             sys.puts(value);
 
-            var cur = new tc.bdb.cur(bdb);
+            var cur = bdb.cur(bdb);
             cur.first(function func(e) { // recursive asynchronous function
               if (e) sys.error(e);
 
@@ -205,7 +205,7 @@ samples.push(function() {
         if (e) sys.error(e);
 
         if (--n === 0) {
-          var qry = new tc.tdb.qry(tdb)
+          var qry = tdb.qry(tdb)
             .cond("age", ">=", 20)
             .cond("lang", "|", "ja,en")
             .order("name", "~v")
