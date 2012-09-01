@@ -44,12 +44,13 @@ function FArgs(args){
   return '';
 }
 
-function TCError(self, func, args){
+function TCError(self, func, args, ecode){
   Error.call(this);
   Error.captureStackTrace(this, arguments.callee);
   this.name = 'TCError';
-  if(isFunc(self.errmsg) && isFunc(self.ecode)){
-    this.message = self.errmsg(self.ecode());
+  this.code = typeof ecode == 'number' ? ecode : isFunc(self.ecode) ? self.ecode() : 0;
+  if(this.code && isFunc(self.errmsg)){
+    this.message = self.errmsg(this.code);
   }
   if(func){
     this.message += '\n   call: ' + func + '(' + FArgs(args) + ')';
@@ -190,7 +191,12 @@ var hooks = {
       '~>': clas.QOSTRASC,
       '~<': clas.QOSTRDESC,
       '>':  clas.QONUMASC,
-      '<':  clas.QONUMDESC
+      '<':  clas.QONUMDESC,
+
+      '~v':  clas.QOSTRASC,
+      '~^':  clas.QOSTRDESC,
+      'v':  clas.QONUMASC,
+      '^':  clas.QONUMDESC
     };
     return clas == TC.TDBQRY ? function(){
       if(isStr(arguments[1])){
@@ -227,8 +233,8 @@ function Hook(name, type, clas, orig){
 
 var OK = {};
 OK[TC.ESUCCESS] = 0;
-OK[TC.ENOREC] = 0;
-OK[TC.EKEEP] = 0;
+OK[TC.ENOREC] = 'norec';
+OK[TC.EKEEP] = 'keep';
 
 function Class(Native){
   var n,
@@ -253,8 +259,17 @@ function Class(Native){
               args = arguments,
               self = this;
               arguments[arguments.length - 1] = function(){
-                if(arguments[0]){
-                  arguments[0] = new TCError(self, pure, args);
+                var code = arguments[0];
+                if(code){
+                  if(code in OK){
+                    code = OK[code];
+                    if(code){
+                      Array.prototype.push.call(arguments, code);
+                    }
+                    arguments[0] = null;
+                  }else{
+                    arguments[0] = new TCError(self, pure, args, code);
+                  }
                 }
                 callback.apply(this, arguments);
               };
