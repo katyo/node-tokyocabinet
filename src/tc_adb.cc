@@ -77,6 +77,7 @@ namespace node {
     static Handle<Value>
     New (const Arguments& args) {
       HandleScope scope;
+      if (!args.IsConstructCall()) return args.Callee()->NewInstance();
       (new ADB)->Wrap(THIS);
       return THIS;
     }
