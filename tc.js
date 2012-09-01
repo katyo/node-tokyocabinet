@@ -282,6 +282,25 @@ function Class(Native){
       }
     })(n, Proto[n], pureName(n));
   }
+
+  if(Native === TC.BDB){
+    Native.cur = Class(TC.BDBCUR);
+    Proto.cur = function(){
+      return new Native.cur(this);
+    };
+  }
+
+  if(Native === TC.TDB){
+    Native.qry = Alias(Class(TC.TDBQRY), {
+      cond: 'addcond',
+      order: 'setorder',
+      limit: 'setlimit'
+    });
+    Proto.qry = function(){
+      return new Native.qry(this);
+    };
+  }
+
   return Native;
 }
 
@@ -299,7 +318,7 @@ function Alias(Native, tab){
   return Native;
 }
 
-exports = module.exports = {
+module.exports = {
   ver: TC.VERSION,
   hdb: Class(TC.HDB),
   bdb: Class(TC.BDB),
@@ -307,11 +326,3 @@ exports = module.exports = {
   tdb: Class(TC.TDB),
   adb: Class(TC.ADB)
 };
-
-exports.bdb.cur = Class(TC.BDBCUR);
-
-exports.tdb.qry = Alias(Class(TC.TDBQRY), {
-  cond: 'addcond',
-  order: 'setorder',
-  limit: 'setlimit'
-});
