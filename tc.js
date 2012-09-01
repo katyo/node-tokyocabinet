@@ -59,18 +59,53 @@ TCError.prototype.__proto__ = Error.prototype;
 
 var hooks = {
   open: function(type, clas, orig){
+    var modes = {
+      'reader': clas.OREADER,
+      'writer': clas.OWRITER,
+      'create': clas.OCREAT,
+      'creat':  clas.OCREAT,
+      'trunc':  clas.OTRUNC,
+      'tsync':  clas.OTSYNC,
+      'sync':   clas.OTSYNC,
+      'nolock': clas.ONOLCK,
+      'nolck':  clas.ONOLCK,
+      'locknb': clas.OLCKNB,
+      'lcknb':  clas.OLCKNB,
+
+      /* short */
+      'r':      clas.OREADER,
+      'w':      clas.OWRITER,
+      'c':      clas.OCREAT,
+      't':      clas.OTRUNC,
+      's':      clas.OTSYNC,
+      'nl':     clas.ONOLCK,
+      'nb':     clas.OLCKNB,
+
+      /* skip */
+      ' ':      0,
+      '+':      0,
+      '|':      0,
+      '/':      0,
+      ',':      0
+    };
     return function(){
       if(isStr(arguments[1])){
-        var i, m,
-        mode = 0,
-        opts = arguments[1].split(/[\|\+\.\-\/]/);
-        for(i = 0; i < opts.length; i++){
-          m = ('o' + opts[i]).toUpperCase();
-          if(m in clas){
-            mode |= clas[m];
+        var a = arguments[1],
+        m = 0, i, t;
+        for(; a; ){
+          for(i in modes){
+            a = a.split(i);
+            if(a.length > 1){
+              t = modes[i];
+              if(isFunc(t)){
+                t = t(arguments[2]);
+              }
+              m |= t;
+            }
+            a = a.join('');
           }
         }
-        arguments[1] = mode;
+        arguments[1] = m;
       }/*else if(type == 'async' && (isFunc(arguments[1]) || )){
         arguments.push(arguments[1]);
         arguments[1] = clas.OREADER | clas.OCREAT;
@@ -79,22 +114,17 @@ var hooks = {
     };
   },
   addcond: function(type, clas, orig){
-    var cond = {
+    var conds = {
       /* string */
       '~=': clas.QCSTREQ,   /* equal */
       '~@': clas.QCSTRINC,  /* include */
-      '@':  clas.QCSTRINC,
       '~^': clas.QCSTRBW,   /* begin */
-      '^':  clas.QCSTRBW,
       '~$': clas.QCSTREW,   /* end */
-      '$':  clas.QCSTREW,
       '~&': clas.QCSTRAND,  /* all */
-      '&':  clas.QCSTRAND,
       '~|': clas.QCSTROR,   /* one */
-      '|':  clas.QCSTROR,
       '~*': clas.QCSTROREQ, /* in (tokens) */
       '~?': clas.QCSTRRX,   /* regexp */
-      '~':  clas.QCSTRRX,
+
       /* number */
       '==': clas.QCNUMEQ,
       '>':  clas.QCNUMGT,
@@ -104,26 +134,43 @@ var hooks = {
       '<>': clas.QCNUMBT,   /* between */
       '><': clas.QCNUMBT,
       '=*': clas.QCNUMOREQ, /* in (tokens) */
+
       /* fulltext */
       '?~': clas.QCFTSPH,   /* phrase */
       '?&': clas.QCFTSAND,  /* all */
       '?|': clas.QCFTSOR,   /* one */
       '?*': clas.QCFTSEX,   /* compound */
+
       /* flags */
       '!': clas.QCNEGATE,   /* negate */
       '%': clas.QCNOIDX,    /* no index */
+
+      /* short */
       '=': function(arg){ return isStr(arg) ? '~=' : '=='; },
-      '*': function(arg){ return isStr(arg) ? '~*' : '=*'; }
+      '*': function(arg){ return isStr(arg) ? '~*' : '=*'; },
+
+      /* string */
+      '@':  clas.QCSTRINC,  /* include */
+      '^':  clas.QCSTRBW,   /* begin */
+      '$':  clas.QCSTREW,   /* end */
+      '&':  clas.QCSTRAND,  /* all */
+      '|':  clas.QCSTROR,   /* one */
+      '~':  clas.QCSTRRX,   /* regexp */
+
+      /* skip */
+      ' ':      0,
+      '/':      0,
+      ',':      0
     };
     return clas == TC.TDBQRY ? function(){
       if(isStr(arguments[1])){
         var a = arguments[1],
         c = 0, i, t;
         for(; a; ){
-          for(i in cond){
+          for(i in conds){
             a = a.split(i);
             if(a.length > 1){
-              t = cond[i];
+              t = conds[i];
               if(isFunc(t)){
                 t = t(arguments[2]);
               }
