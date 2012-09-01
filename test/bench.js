@@ -1,44 +1,46 @@
 // Hash db bench
 
 var sys = require('util');
-var TC = require('../tc_all');
+var tc = require('../tc');
 var fs = require('fs');
 
-sys.puts("Tokyo Cabinet version " + TC.VERSION);
+sys.puts("Tokyo Cabinet version " + tc.ver);
 
 var samples = [];
 var next_sample = function () {
   var next = samples.shift();
   if (next) next();
-}
+};
 setTimeout(next_sample, 10);
 
 var put_count = 100000;
 
 var hdb;
-var hdb;
 
 samples.push(function() {
   sys.puts('sync');
 
-  hdb = new TC.HDB;
-  if (!hdb.open('casket1.tch', TC.HDB.OWRITER | TC.HDB.OCREAT)) {
-    sys.error(hdb.errmsg());
+  hdb = tc.hdb();
+  try {
+    hdb.openSync('casket1.tch', 'wc');
+  } catch(e) {
+    sys.error(e);
   }
 
-  var t = Date.now();
-  for (var i = 0; i < put_count; i++) {
-    if (!hdb.put('key' + i, 'val' + i + ' 0123456789')) {
-      sys.error(hdb.errmsg());
+  var i, t = Date.now();
+  for (i = 0; i < put_count; i++) {
+    try {
+      hdb.putSync('key' + i, 'val' + i + ' 0123456789');
+    } catch(e) {
+      sys.error(e);
     }
   }
   sys.puts(Date.now() - t);
-  for (var i = 0; i < 10; i++) {
-    var val = hdb.get('key' + i);
-    if (!val) {
-      sys.error(hdb.errmsg());
-    } else {
-      sys.puts(val);
+  for (i = 0; i < 10; i++) {
+    try {
+      sys.puts(hdb.getSync('key' + i));
+    } catch(e) {
+      sys.error(e);
     }
   }
 
@@ -48,26 +50,28 @@ samples.push(function() {
 samples.push(function() {
   sys.puts('async');
 
-  var hdb = new TC.HDB;
-  // this line is necessary for an async operation
-  if (!hdb.setmutex()) throw hdb.errmsg();
+  var hdb = tc.hdb();
 
-  hdb.openAsync('casket2.tch', TC.HDB.OWRITER | TC.HDB.OCREAT, function(e) {
+  // this line is necessary for an async operation
+  hdb.setmutex();
+
+  hdb.open('casket2.tch', 'wc', function(e) {
     if (e) sys.error(hdb.errmsg(e));
 
     var t = Date.now();
     var n = put_count;
     for (var i = 0; i < put_count; i++) {
-      hdb.putAsync('key' + i, 'val' + i + ' 0123456789', function(e) {
-        if (e) sys.error(hdb.errmsg(e));
+      hdb.put('key' + i, 'val' + i + ' 0123456789', function(e) {
+        if (e) sys.error(e);
+
         if (--n === 0) {
           sys.puts(Date.now() - t);
 
           n = 10;
           for (var i = 0; i < 10; i++) {
-            hdb.getAsync('key' + i, function(e, val) {
+            hdb.get('key' + i, function(e, val) {
               if (e) {
-                sys.puts(hdb.errmsg(e));
+                sys.puts(e);
               } else {
                 sys.puts(val);
               }
@@ -82,21 +86,22 @@ samples.push(function() {
   });
 });
 
-
 samples.push(function() {
   sys.puts('async');
 
-  var hdb = new TC.HDB;
+  var hdb = tc.hdb();
   // this line is necessary for an async operation
-  if (!hdb.setmutex()) throw hdb.errmsg();
+  hdb.setmutex();
 
-  hdb.openAsync('casket3.tch', TC.HDB.OWRITER | TC.HDB.OCREAT, function(e) {
-    if (e) sys.error(hdb.errmsg(e));
+  hdb.open('casket3.tch', 'wc', function(e) {
+    if (e) sys.error(e);
 
     var t = Date.now();
     var i = 0;
     (function func() {
-      hdb.putAsync('key' + i, 'val' + i + ' 0123456789', function(e) {
+      hdb.put('key' + i, 'val' + i + ' 0123456789', function(e) {
+        if (e) sys.error(e);
+
         if (++i < put_count) {
           func();
         } else {
@@ -104,9 +109,9 @@ samples.push(function() {
 
           var n = 10;
           for (var j = 0; j < 10; j++) {
-            hdb.getAsync('key' + j, function(e, val) {
+            hdb.get('key' + j, function(e, val) {
               if (e) {
-                sys.puts(hdb.errmsg(e));
+                sys.puts(e);
               } else {
                 sys.puts(val);
               }
@@ -120,4 +125,3 @@ samples.push(function() {
     }());
   });
 });
-
