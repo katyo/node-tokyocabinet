@@ -712,7 +712,7 @@ namespace node {
     class FwmkeysAsyncData : public FwmkeysData, public AsyncData {
     public:
       FwmkeysAsyncData (const Arguments& args)
-      : FwmkeysData(args), AsyncData(args[1]), ArgsData(args) {}
+      : FwmkeysData(args), AsyncData(args[2]), ArgsData(args) {}
     };
 
     class VnumData : public KeyData {
