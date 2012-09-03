@@ -296,7 +296,7 @@ var hooks = {
         '>':  Native.QCNUMGT,
         '>=': Native.QCNUMGE,
         '<':  Native.QCNUMLT,
-        '<=': Native.QCNUMLT,
+        '<=': Native.QCNUMLE,
         '<>': Native.QCNUMBT,   /* between */
         '><': Native.QCNUMBT,
         '=*': Native.QCNUMOREQ, /* in (tokens) */
