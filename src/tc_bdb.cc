@@ -362,7 +362,7 @@ namespace node {
       }
 
       ~RangeData () {
-        tclistdel(list);
+        if(list != NULL) tclistdel(list);
       }
 
       bool

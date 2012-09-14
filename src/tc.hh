@@ -41,14 +41,18 @@ namespace node {
     return list;
   }
 
-  inline Local<Array> tclisttoary (TCLIST *list) {
+  inline Local<Value> tclisttoary (TCLIST *list) {
     HandleScope scope;
-    int len = tclistnum(list);
-    Local<Array> ary = Array::New(len);
-    for (int i = 0; i < len; i++) {
-      ary->Set(Integer::New(i), String::New(tclistval2(list, i)));
+    if(list != NULL){
+      int len = tclistnum(list);
+      Local<Array> ary = Array::New(len);
+      for (int i = 0; i < len; i++) {
+        ary->Set(Integer::New(i), String::New(tclistval2(list, i)));
+      }
+      return scope.Close(ary);
+    }else{
+      return scope.Close(Null());
     }
-    return scope.Close(ary);
   }
 
   inline TCMAP* objtotcmap (const Handle<Object> obj) {
@@ -68,19 +72,23 @@ namespace node {
     return map;
   }
 
-  inline Local<Object> tcmaptoobj (TCMAP *map) {
+  inline Local<Value> tcmaptoobj (TCMAP *map) {
     HandleScope scope;
-    const char *kbuf, *vbuf;
-    int ksiz, vsiz;
-    Local<Object> obj = Object::New();
-    tcmapiterinit(map);
-    for (;;) {
-      kbuf = static_cast<const char*>(tcmapiternext(map, &ksiz));
-      if (kbuf == NULL) break;
-      vbuf = static_cast<const char*>(tcmapiterval(kbuf, &vsiz));
-      obj->Set(String::New(kbuf, ksiz), String::New(vbuf, vsiz));
+    if(map != NULL){
+      const char *kbuf, *vbuf;
+      int ksiz, vsiz;
+      Local<Object> obj = Object::New();
+      tcmapiterinit(map);
+      for (;;) {
+        kbuf = static_cast<const char*>(tcmapiternext(map, &ksiz));
+        if (kbuf == NULL) break;
+        vbuf = static_cast<const char*>(tcmapiterval(kbuf, &vsiz));
+        obj->Set(String::New(kbuf, ksiz), String::New(vbuf, vsiz));
+      }
+      return scope.Close(obj);
+    }else{
+      return scope.Close(Null());
     }
-    return scope.Close(obj);
   }
 
   /* sync method blueprint */

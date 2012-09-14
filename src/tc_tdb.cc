@@ -262,7 +262,7 @@ namespace node {
       }
 
       ~PutData () {
-        tcmapdel(map);
+        if(map != NULL) tcmapdel(map);
       }
 
       static bool checkArgs (const Arguments& args) {
@@ -349,7 +349,7 @@ namespace node {
       GetData (const Arguments& args) : KeyData(args), ArgsData(args) {}
 
       ~GetData () {
-        tcmapdel(map);
+        if(map != NULL) tcmapdel(map);
       }
 
       bool run () {
@@ -687,7 +687,7 @@ namespace node {
       SearchData (const Arguments& args) : ArgsData(args) {}
 
       ~SearchData () {
-        tclistdel(list);
+        if(list != NULL) tclistdel(list);
       }
 
       bool run () {
@@ -771,7 +771,7 @@ namespace node {
 
       ~MetasearchData () {
         tcfree(qrys);
-        tclistdel(list);
+        if(list != NULL) tclistdel(list);
       }
 
       bool run () {
