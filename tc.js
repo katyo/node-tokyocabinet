@@ -97,6 +97,7 @@ var alias = {
   xmsiz:     'setxmsiz',
   dfunit:    'setdfunit',
   recs:      'rnum',
+  rows:      'rnum',
   size:      'fsiz',
   purge:     'vanish',
   /* for tdb */
@@ -132,7 +133,7 @@ var hooks = {
         nolck:  Native.ONOLCK,
         locknb: Native.OLCKNB,
         lcknb:  Native.OLCKNB,
-        
+
         /* short */
         r:      Native.OREADER,
         w:      Native.OWRITER,
@@ -141,7 +142,7 @@ var hooks = {
         s:      Native.OTSYNC,
         nl:     Native.ONOLCK,
         nb:     Native.OLCKNB,
-        
+
         /* skip */
         ' ':      0,
         '+':      0,
@@ -162,13 +163,13 @@ var hooks = {
         'deflate': Native.TDEFLATE,
         'bzip':    Native.TBZIP,
         'tcbs':    Native.TTCBS,
-        
+
         /* short */
         'l':       Native.TLARGE,
         'd':       Native.TDEFLATE,
         'b':       Native.TBZIP,
         't':       Native.TTCBS,
-        
+
         /* skip */
         ' ':       0,
         ',':       0,
@@ -216,34 +217,35 @@ var hooks = {
       decimal: Native.ITDECIMAL,
       token:   Native.ITTOKEN,
       qgram:   Native.ITQGRAM,
-      
+
       opt:     Native.ITOPT,
-      'void':    Native.ITVOID,
-      
+      'void':  Native.ITVOID,
+
       /* short */
       lex:     Native.ITLEXICAL,
       dec:     Native.ITDECIMAL,
       tok:     Native.ITTOKEN,
       qgr:     Native.ITQGRAM,
-      
+
       /* flags */
       keep:    Native.ITKEEP,
-      
+
       /* too short */
       l:       Native.ITLEXICAL,
       d:       Native.ITDECIMAL,
       t:       Native.ITTOKEN,
       q:       Native.ITQGRAM,
-      
+
       o:       Native.ITOPT,
       v:       Native.ITVOID,
-      
+
       k:       Native.ITKEEP,
-      
+
       /* skip */
-      ' ':       0,
-      '/':       0,
-      ',':       0
+      '_':     0,
+      ' ':     0,
+      '/':     0,
+      ',':     0
     };
     return function(){
       AStr2Bits(arguments, 1, types);
@@ -257,7 +259,7 @@ var hooks = {
         current: Native.CPCURRENT,
         before:  Native.CPBEFORE,
         after:   Native.CPAFTER,
-        
+
         /* short */
         '@':     Native.CPCURRENT,
         '~':     Native.CPCURRENT,
@@ -265,8 +267,9 @@ var hooks = {
         '<':     Native.CPBEFORE,
         'v':     Native.CPAFTER,
         '>':     Native.CPAFTER,
-        
+
         /* skip */
+        '_':     0,
         ' ':     0,
         '/':     0,
         ',':     0
@@ -324,6 +327,7 @@ var hooks = {
         '~':  Native.QCSTRRX,   /* regexp */
 
         /* skip */
+        '_':      0,
         ' ':      0,
         '/':      0,
         ',':      0
@@ -336,13 +340,16 @@ var hooks = {
     },
     setorder: function(Class, Native, orig){
       var ords = {
+        asc:  Native.QOSTRASC,
+        desc: Native.QOSTRDESC,
+
         '~>': Native.QOSTRASC,
         '~<': Native.QOSTRDESC,
         '>':  Native.QONUMASC,
         '<':  Native.QONUMDESC,
 
-        '~v':  Native.QOSTRASC,
-        '~^':  Native.QOSTRDESC,
+        '~v': Native.QOSTRASC,
+        '~^': Native.QOSTRDESC,
         'v':  Native.QONUMASC,
         '^':  Native.QONUMDESC
       };
@@ -463,7 +470,7 @@ function applyFixes(Class, Native, Table, Ident){
 'H,B,F,T,A'.split(',').forEach(function(Pref){
   var Name = Pref + 'DB',
   name = Name.toLowerCase();
-  
+
   exports[name] = applyFixes(name, TC[Name], fixes);
 });
 
@@ -472,7 +479,7 @@ function applyFixes(Class, Native, Table, Ident){
   var Name = Pref[0] + 'DB',
   name = Pref[1].toLowerCase(),
   Cons = TC[Name][name] = applyFixes(name, TC[Name + Pref[1]], fixes);
-  
+
   TC[Name].prototype[name] = function(){
     return new Cons(this);
   };
