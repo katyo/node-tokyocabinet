@@ -49,10 +49,11 @@ function FArgs(args){
 }
 
 function AStr2Bits(args, num, opts){
-  var arg = args[num], opt, bit;
+  var arg = args[num], pre, opt, bit;
   if(isStr(arg)){
     args[num] = 0;
-    for(; arg; ){
+    do{
+      pre = arg;
       for(opt in opts){
         arg = arg.split(opt);
         if(arg.length > 1){
@@ -64,7 +65,7 @@ function AStr2Bits(args, num, opts){
         }
         arg = arg.join('');
       }
-    }
+    }while(pre != arg);
   }
 }
 
